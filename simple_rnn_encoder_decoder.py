@@ -13,7 +13,8 @@ alpha = "abcd"
 
 seq_length = 7      # Number of cases : 4^7 = 16384
 time_steps = 7
-data_size = 5600
+data_size = 5800
+test_data_size = 30
 epochs = 50
 
 
@@ -102,12 +103,12 @@ model.add(Activation('softmax'))
 model.compile(loss='categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
-model.fit(X_train_ids[:-10], Y_train_ids[:-10], epochs=epochs)
+model.fit(X_train_ids[:-test_data_size], Y_train_ids[:-test_data_size], epochs=epochs)
 
 
 # ==============================================================================
-X_test = X_train_ids[-10:]
-Y_test = Y_train_ids[-10:]
+X_test = X_train_ids[-test_data_size:]
+Y_test = Y_train_ids[-test_data_size:]
 
 predictions = model.predict(X_test, verbose=0)
 
