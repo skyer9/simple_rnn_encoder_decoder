@@ -18,6 +18,16 @@ epochs = 50
 
 
 # ==============================================================================
+# mapping rule
+#
+#   X => Y
+#   ------
+#   1 => a
+#   2 => b
+#   3 => c
+#   ...
+#
+# ==============================================================================
 def create_data(X_seed, Y_seed, data_size, data_length):
     seed_size = len(X_seed)
     X_data, Y_data = [], []
@@ -79,7 +89,6 @@ Y_train_ids = np.reshape(Y_train_ids, (-1, seq_length, Y_CLASSES))
 
 # ==============================================================================
 print('Build model...')
-
 model = Sequential()
 
 model.add(LSTM(32, input_shape=(time_steps, X_CLASSES), return_sequences=False))
