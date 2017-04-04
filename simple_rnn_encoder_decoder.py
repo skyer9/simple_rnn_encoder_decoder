@@ -11,7 +11,9 @@ from keras.utils import np_utils
 digit = "1234"
 alpha = "abcd"
 
-seq_length = 7      # Number of cases : 4^7 = 16384
+x_seq_length = 7      # Number of cases : 4^7 = 16384
+y_seq_length = 7
+hidden_size = 32
 time_steps = 7
 data_size = 5800
 test_data_size = 30
@@ -29,13 +31,12 @@ epochs = 50
 #   ...
 #
 # ==============================================================================
-def create_data(X_seed, Y_seed, data_size, data_length):
-    seed_size = len(X_seed)
+def create_data(X_seed, Y_seed, data_size, x_seq_length):
     X_data, Y_data = [], []
     for i in range(data_size):
-        rand_pick = np.random.choice(seed_size, data_length)
-        x = [X_seed[c] for c in rand_pick]
-        y = [Y_seed[c] for c in rand_pick]
+        X_rand_pick = np.random.choice(len(X_seed), x_seq_length)
+        x = [X_seed[c] for c in X_rand_pick]
+        y = [Y_seed[c] for c in X_rand_pick]
         x = ''.join(x)
         y = ''.join(y)
         X_data.append(x)
@@ -72,7 +73,7 @@ def token_ids_to_sentence(token_ids, vocabulary_rev):
 
 
 # ==============================================================================
-X_train, Y_train = create_data(digit, alpha, data_size, seq_length)
+X_train, Y_train = create_data(digit, alpha, data_size, x_seq_length)
 
 X_vacab, X_vacab_rev = create_vocabulary(X_train)
 Y_vacab, Y_vacab_rev = create_vocabulary(Y_train)
@@ -83,20 +84,20 @@ X_train_ids = sentences_to_token_ids(X_train, X_vacab)
 Y_train_ids = sentences_to_token_ids(Y_train, Y_vacab)
 
 X_train_ids = np_utils.to_categorical(X_train_ids, num_classes=X_CLASSES)
-X_train_ids = np.reshape(X_train_ids, (-1, seq_length, X_CLASSES))
+X_train_ids = np.reshape(X_train_ids, (-1, x_seq_length, X_CLASSES))
 Y_train_ids = np_utils.to_categorical(Y_train_ids, num_classes=Y_CLASSES)
-Y_train_ids = np.reshape(Y_train_ids, (-1, seq_length, Y_CLASSES))
+Y_train_ids = np.reshape(Y_train_ids, (-1, y_seq_length, Y_CLASSES))
 
 
 # ==============================================================================
 print('Build model...')
 model = Sequential()
 
-model.add(LSTM(32, input_shape=(time_steps, X_CLASSES), return_sequences=False))
+model.add(LSTM(hidden_size, input_shape=(x_seq_length, X_CLASSES), return_sequences=False))
 
-model.add(RepeatVector(time_steps))
+model.add(RepeatVector(y_seq_length))
 
-model.add(LSTM(32, return_sequences=True))
+model.add(LSTM(hidden_size, return_sequences=True))
 
 model.add(TimeDistributed(Dense(Y_CLASSES)))
 model.add(Activation('softmax'))
