@@ -14,9 +14,8 @@ alpha = "abcd"
 x_seq_length = 7      # Number of cases : 4^7 = 16384
 y_seq_length = 7
 hidden_size = 32
-time_steps = 7
-data_size = 5800
-test_data_size = 30
+data_size = 6800
+test_data_size = 50
 epochs = 50
 
 
