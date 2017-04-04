@@ -1,4 +1,4 @@
-# https://github.com/hunkim/DeepLearningZeroToAll/blob/master/Keras/klab-12-5-seq2seq.py
+# https://gist.github.com/rouseguy/1122811f2375064d009dac797d59bae9
 
 import numpy as np
 from keras.layers.core import Activation, Dense, RepeatVector
