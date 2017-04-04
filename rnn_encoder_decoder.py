@@ -11,7 +11,6 @@ from random import randint
 
 x_seq_length = 7
 y_seq_length = 4
-time_steps = 7
 data_size = 10000
 test_data_size = 30
 epochs = 65
@@ -104,7 +103,8 @@ model.add(Activation('softmax'))
 model.compile(loss='categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
-model.fit(X_train_ids[:-test_data_size], Y_train_ids[:-test_data_size], epochs=epochs)
+model.fit(X_train_ids[:-test_data_size], Y_train_ids[:-test_data_size],
+          batch_size=batch_size, epochs=epochs)
 
 
 # ==============================================================================
