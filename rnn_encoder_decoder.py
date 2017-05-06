@@ -20,6 +20,11 @@ hidden_size = 256
 batch_size = 128
 num_layer = 1
 
+# https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf
+# The LSTM learns much better when the source sentences are reversed
+# (the target sentences are not reversed).
+reverse_x = True
+
 
 # ==============================================================================
 # mapping rule
@@ -39,12 +44,15 @@ def create_data(data_size, X_data_length, Y_data_length):
         b = randint(0, 999)
         x = '%i+%i' % (a, b)
         x = x + (' ' * (X_data_length - len(x)))
+        if reverse_x:
+            x = x[::-1]
         if x in X_data:
             # skip duplicate data
             continue
 
         y = '%i' % (a + b)
         y = y + (' ' * (Y_data_length - len(y)))
+
         X_data.append(x)
         Y_data.append(y)
         if len(X_data) == data_size:
@@ -146,6 +154,9 @@ predictions = model.predict(X_question, verbose=0)
 for i, prediction in enumerate(predictions):
     x_ids = np.argmax(X_question[i], axis=1)
     x_str = token_ids_to_sentence(x_ids, X_vacab_rev)
+
+    if reverse_x:
+        x_str = x_str[::-1]
 
     y_ids = np.argmax(Y_answer[i], axis=1)
     y_str = token_ids_to_sentence(y_ids, Y_vacab_rev)
