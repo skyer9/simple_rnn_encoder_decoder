@@ -137,5 +137,32 @@ print('Test score:', score[0])
 print('Test accuracy:', score[1])
 
 
+# ==============================================================================
+# see how it works
+X_question = X_test[-2:]
+Y_answer = Y_test[-2:]
+
+predictions = model.predict(X_question, verbose=0)
+for i, prediction in enumerate(predictions):
+    x_ids = np.argmax(X_question[i], axis=1)
+    x_str = token_ids_to_sentence(x_ids, X_vacab_rev)
+
+    y_ids = np.argmax(Y_answer[i], axis=1)
+    y_str = token_ids_to_sentence(y_ids, Y_vacab_rev)
+
+    pred_ids = np.argmax(prediction, axis=1)
+    pred_str = token_ids_to_sentence(pred_ids, Y_vacab_rev)
+
+    if y_str == pred_str:
+        result = 'good'
+    else:
+        result = 'fail'
+
+    print('X: %s, Y: %s, Prediction: %s, %s' % (x_str,
+                                                y_str,
+                                                pred_str,
+                                                result))
+
+
 # fix tensorflow bug.
 K.clear_session()
