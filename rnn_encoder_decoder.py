@@ -1,20 +1,22 @@
 # https://gist.github.com/rouseguy/1122811f2375064d009dac797d59bae9
 
+from random import randint
+
 import numpy as np
+from keras import backend as K
 from keras.layers.core import Activation, Dense, RepeatVector
 from keras.layers.recurrent import LSTM
 from keras.layers.wrappers import TimeDistributed
 from keras.models import Sequential
+from keras.optimizers import Adam
 from keras.utils import np_utils
-from keras import backend as K
-from random import randint
 
 
 x_seq_length = 7
 y_seq_length = 4
 data_size = 50000
 test_data_size = 500
-epochs = 16
+epochs = 32
 
 hidden_size = 256
 batch_size = 128
@@ -128,8 +130,9 @@ for _ in range(num_layer):
 model.add(TimeDistributed(Dense(Y_CLASSES)))
 model.add(Activation('softmax'))
 
+adam = Adam(lr=0.0005)
 model.compile(loss='categorical_crossentropy',
-              optimizer='adam',
+              optimizer=adam,
               metrics=['accuracy'])
 
 model.fit(X_train,
